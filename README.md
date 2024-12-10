@@ -19,8 +19,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ## Smart Contracts
 
 1. Implement a smart contract in `contracts`
-2. 
-3. To compile the contract, run
+2. To compile the contract, run
 
 ```bash
 npm run build:hardhat
