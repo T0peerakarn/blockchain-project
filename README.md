@@ -60,4 +60,4 @@ import contractAddress from "@/lib/contracts/YOUR_CONTRACT_NAME/contractAddress.
 import contractAbi from "@/lib/contracts/YOUR_CONTRACT_NAME/contractAbi.json";
 ```
 
-7. Thi Luea Ko Su Su Cha <3
+7. Tee Luea Kor Su Su Ja <3
