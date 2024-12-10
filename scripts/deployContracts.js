@@ -2,21 +2,28 @@ const fs = require("fs");
 const path = require("path");
 
 const main = async () => {
-  const HelloWorldContract = await ethers.getContractFactory("HelloWorld");
-  const helloWorldContract = await HelloWorldContract.deploy();
+  const contracts = ["HelloWorld", "MedicalRecordValidator"];
 
-  console.log(`HelloWorldContract deployed to: ${helloWorldContract.address}`);
+  for (const contractName of contracts) {
+    const Contract = await ethers.getContractFactory(contractName);
+    const contract = await Contract.deploy();
 
-  const contractsDir = path.join(__dirname, "../src/lib/contracts/HelloWorld");
+    console.log(`${contractName} deployed to: ${contract.address}`);
 
-  if (!fs.existsSync(contractsDir)) {
-    fs.mkdirSync(contractsDir, { recursive: true });
+    const contractsDir = path.join(
+      __dirname,
+      `../src/lib/contracts/${contractName}`
+    );
+
+    if (!fs.existsSync(contractsDir)) {
+      fs.mkdirSync(contractsDir, { recursive: true });
+    }
+
+    fs.writeFileSync(
+      path.join(contractsDir, "contractAddress.json"),
+      JSON.stringify({ address: contract.address }, null, 2)
+    );
   }
-
-  fs.writeFileSync(
-    path.join(contractsDir, "contractAddress.json"),
-    JSON.stringify({ address: helloWorldContract.address }, null, 2)
-  );
 };
 
 main()
