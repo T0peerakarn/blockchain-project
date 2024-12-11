@@ -1,8 +1,6 @@
 const {ethers} = require("hardhat");
 const {expect} = require("chai");
 const crypto = require('crypto');
-const {utils} = require('ethers');
-
 
 describe("MedicalRecordValidatorContract", () => {
     let mrv;
