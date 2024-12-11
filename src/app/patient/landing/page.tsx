@@ -52,9 +52,9 @@ const PatientLandingPage = () => {
           <table className="w-full bg-[#F7F7F7] shadow-md rounded-lg">
             <thead className="josefin-sans font-light text-left bg-[#EBEBEB]">
               <tr>
-                <th className="p-4 border-b font-medium">Appointment ID</th>
+                <th className="p-4 border-b font-medium rounded-tl-lg">Appointment ID</th>
                 <th className="p-4 border-b font-medium">Appointment Name</th>
-                <th className="p-4 border-b font-medium">Date</th>
+                <th className="p-4 border-b font-medium rounded-tr-lg">Date</th>
               </tr>
             </thead>
             <tbody>
