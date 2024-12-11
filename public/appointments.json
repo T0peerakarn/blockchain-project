@@ -1,0 +1,17 @@
+[
+  {
+    "id": "1",
+    "name": "General Checkup",
+    "date": "2024-10-01"
+  },
+  {
+    "id": "2",
+    "name": "Dental Cleaning",
+    "date": "2024-10-15"
+  },
+  {
+    "id": "3",
+    "name": "Eye Examination",
+    "date": "2024-11-05"
+  }
+]
