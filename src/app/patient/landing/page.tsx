@@ -5,6 +5,7 @@ import SearchBar from "@/components/SearchBar";
 import Button from "@/components/Button";
 import LeftMenuBar from "@/components/LeftMenuBar";
 import QuickMenuButton from "@/components/QuickMenuButton";
+import Table from "@/components/Table";
 
 interface Appointment {
   id: string;
@@ -13,7 +14,29 @@ interface Appointment {
 }
 
 const PatientLandingPage = () => {
-  const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [appointments, setAppointments] = useState<
+    Record<string, keyof Appointment>[]
+  >([]);
+
+  const menuItems = [
+    {
+      title: "Appointments",
+      onClick: () => console.log("Appointments clicked"),
+    },
+    {
+      title: "Medical History",
+      onClick: () => console.log("Medical History clicked"),
+    },
+    { title: "Lab Results", onClick: () => console.log("Lab Results clicked") },
+    { title: "Reports", onClick: () => console.log("Reports clicked") },
+    { title: "Settings", onClick: () => console.log("Settings clicked") },
+  ];
+
+  const appointmentColumns = [
+    { key: "id", title: "Appointment ID" },
+    { key: "name", title: "Appointment Name" },
+    { key: "date", title: "Date" },
+  ];
 
   useEffect(() => {
     fetch("/appointments.json")
@@ -30,7 +53,7 @@ const PatientLandingPage = () => {
   return (
     <div className="flex h-screen">
       {/* Left Menu Panel */}
-      <LeftMenuBar />
+      <LeftMenuBar menuItems={menuItems} />
 
       <div className="w-[80%] p-8">
         {/* Search Bar */}
@@ -41,33 +64,26 @@ const PatientLandingPage = () => {
         {/* Quick Menu */}
         <h1 className="josefin-sans text-xl mb-4 text-[#585858]">Quick Menu</h1>
         <div className="grid grid-cols-3 gap-4 mb-8">
-          <QuickMenuButton title="Make an Appointment" onClick={() => console.log("Make an Appointment clicked")} />
-          <QuickMenuButton title="Change Personal Information" onClick={() => console.log("Change Personal Information clicked")} />
-          <QuickMenuButton title="View Medical History" onClick={() => console.log("View Medical History clicked")} />
+          <QuickMenuButton
+            title="Make an Appointment"
+            onClick={() => console.log("Make an Appointment clicked")}
+          />
+          <QuickMenuButton
+            title="Change Personal Information"
+            onClick={() => console.log("Change Personal Information clicked")}
+          />
+          <QuickMenuButton
+            title="View Medical History"
+            onClick={() => console.log("View Medical History clicked")}
+          />
         </div>
 
         {/* Appointment Summary */}
-        <div>
-          <h2 className="josefin-sans text-xl mb-4 text-[#585858]">Your Appointment Summary</h2>
-          <table className="w-full bg-[#F7F7F7] shadow-md rounded-lg">
-            <thead className="josefin-sans font-light text-left bg-[#EBEBEB]">
-              <tr>
-                <th className="p-4 border-b font-medium">Appointment ID</th>
-                <th className="p-4 border-b font-medium">Appointment Name</th>
-                <th className="p-4 border-b font-medium">Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              {appointments.map((appointment) => (
-                <tr key={appointment.id} className="josefin-sans">
-                  <td className="p-4 border-b font-light">{appointment.id}</td>
-                  <td className="p-4 border-b font-light">{appointment.name}</td>
-                  <td className="p-4 border-b font-light">{appointment.date}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <Table
+          title="Your Appointment Summary"
+          columns={appointmentColumns}
+          data={appointments}
+        />
       </div>
     </div>
   );
