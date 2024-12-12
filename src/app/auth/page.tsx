@@ -72,7 +72,7 @@ const AuthPage = () => {
                                 />
                             </div>
                             <div className="flex items-center">
-                                <Button disabled={isPending} title="Login"/>
+                                <Button disabled={isPending} type='submit' title="Login"/>
                                 <p className="ml-auto text-center josefin-sans text-xl text-[#767676] font-light hover:underline cursor-pointer">
                                     Forgot your password?
                                 </p>
