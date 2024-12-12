@@ -62,7 +62,7 @@ const PatientLandingPage = () => {
         </div>
 
         {/* Quick Menu */}
-        <h1 className="josefin-sans text-xl mb-4 text-[#585858]">Quick Menu</h1>
+        <h1 className="josefin-sans text-xl mb-4 text-[#585858] font-medium">Quick Menu</h1>
         <div className="grid grid-cols-3 gap-4 mb-8">
           <QuickMenuButton
             title="Make an Appointment"
