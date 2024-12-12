@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import SearchBar from "@/components/SearchBar";
 import LeftMenuBar from "@/components/LeftMenuBar";
+import Button from "@/components/Button";
 
 interface PersonalInfo {
   firstName: string;
@@ -17,6 +19,7 @@ interface PersonalInfo {
 
 const PersonalInfoPage = () => {
   const [personalInfo, setPersonalInfo] = useState<PersonalInfo | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     fetch("/personalInfo.json")
@@ -46,7 +49,7 @@ const PersonalInfoPage = () => {
         </div>
 
         {/* Personal Information */}
-        <h1 className="josefin-sans text-xl mb-4 text-[#585858]">Personal Information</h1>
+        <h1 className="josefin-sans text-xl mb-4 text-[#585858] font-medium">Personal Information</h1>
         <div className="bg-white shadow-md rounded-lg p-8">
           <div className="mb-4">
             <h2 className="text-lg font-medium">Full Name</h2>
@@ -67,6 +70,7 @@ const PersonalInfoPage = () => {
             <p>Marital Status: {personalInfo.maritalStatus}</p>
             <p>Religion: {personalInfo.religion}</p>
           </div>
+          <Button title="Edit" onClick={() => router.push("/patient/editInfo")} />
         </div>
       </div>
     </div>

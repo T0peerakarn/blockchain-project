@@ -39,7 +39,7 @@ const PatientLandingPage = () => {
         </div>
 
         {/* Quick Menu */}
-        <h1 className="josefin-sans text-xl mb-4 text-[#585858]">Quick Menu</h1>
+        <h1 className="josefin-sans text-xl mb-4 text-[#585858] font-medium">Quick Menu</h1>
         <div className="grid grid-cols-3 gap-4 mb-8">
           <QuickMenuButton title="Make an Appointment" onClick={() => console.log("Make an Appointment clicked")} />
           <QuickMenuButton title="Change Personal Information" onClick={() => console.log("Change Personal Information clicked")} />
@@ -48,7 +48,7 @@ const PatientLandingPage = () => {
 
         {/* Appointment Summary */}
         <div>
-          <h2 className="josefin-sans text-xl mb-4 text-[#585858]">Your Appointment Summary</h2>
+          <h2 className="josefin-sans text-xl mb-4 text-[#585858] font-medium">Your Appointment Summary</h2>
           <table className="w-full bg-[#F7F7F7] shadow-md rounded-lg">
             <thead className="josefin-sans font-light text-left bg-[#EBEBEB]">
               <tr>
