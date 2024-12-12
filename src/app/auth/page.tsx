@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, useState } from "react";
+import { useActionState, useState } from "react";
 
 import Image from "next/image";
 
@@ -8,11 +8,13 @@ import TextInput from "@/components/TextInput";
 
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import Button from "@/components/Button";
+import { loginAction } from "@/app/auth/actions";
 
 const AuthPage = () => {
-  const [username, setUsername] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [data, action, isPending] = useActionState(loginAction, undefined);
 
   return (
     <div className="flex flex-row h-screen">
@@ -47,31 +49,41 @@ const AuthPage = () => {
                 Login to continue
               </p>
             </div>
-            <div className="flex flex-col gap-2">
-              <TextInput
-                label="Username"
-                value={username}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setUsername(e.target.value)
-                }
-              />
-              <TextInput
-                label="Password"
-                value={password}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setPassword(e.target.value)
-                }
-                type={showPassword ? "text" : "password"}
-                RightIcon={showPassword ? FiEye : FiEyeOff}
-                onClickRightIcon={() => setShowPassword(!showPassword)}
-              />
-            </div>
-            <div className="flex items-center">
-              <Button title="Login" onClick={() => console.log("Login!")} />
-              <p className="ml-auto text-center josefin-sans text-xl text-[#767676] font-light hover:underline cursor-pointer">
-                Forgot your password?
-              </p>
-            </div>
+            <form action={action} className="flex flex-col gap-4">
+              <div className="flex flex-col gap-2">
+                <TextInput
+                  label="Email"
+                  name="email"
+                  value={email}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setEmail(e.target.value)
+                  }
+                />
+                <TextInput
+                  label="Password"
+                  name="password"
+                  value={password}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setPassword(e.target.value)
+                  }
+                  type={showPassword ? "text" : "password"}
+                  RightIcon={showPassword ? FiEye : FiEyeOff}
+                  onClickRightIcon={() => setShowPassword(!showPassword)}
+                />
+              </div>
+              <div className="flex items-center">
+                <Button disabled={isPending} type="submit" title="Login" />
+                <p className="ml-auto text-center josefin-sans text-xl text-[#767676] font-light hover:underline cursor-pointer">
+                  Forgot your password?
+                </p>
+              </div>
+              {data?.error && (
+                <span className="josefin-sans text-red-500">
+                  {" "}
+                  {data?.error}{" "}
+                </span>
+              )}
+            </form>
           </div>
           <div className="flex items-center gap-4">
             <div className="h-0 w-1/4 border-t-[1.5px] border-[#A0A0A0]" />

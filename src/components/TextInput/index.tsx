@@ -19,7 +19,7 @@ const TextInput = ({
   return (
     <div>
       <p className="josefin-sans italic text-[#939393] font-light">{label}</p>
-      <div className="flex flex-row items-center bg-[#F1F1F1] border-[1.5px] border-[#929292] rounded-lg p-2 gap-1">
+      <div className="flex flex-row items-center bg-[#F1F1F1] border-[1.5px] border-[#929292] rounded-lg p-2 gap-1 focus-within:bg-white focus-within:border-blue-500 transition-all duration-150">
         {LeftIcon && (
           <LeftIcon
             onClick={onClickLeftIcon}
@@ -30,7 +30,7 @@ const TextInput = ({
         )}
         <input
           {...inputProps}
-          className="josefin-sans text-xl w-full bg-transparent outline-none"
+          className="josefin-sans text-xl w-full bg-transparent outline-none focus:bg-white transition-all duration-150"
         />
         {RightIcon && (
           <RightIcon
