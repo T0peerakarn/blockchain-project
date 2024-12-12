@@ -48,13 +48,18 @@ const EditInfoPage = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // LOGIC GOES HERE, FIX HEREEEEEEE
+    // FIX/ADD LOGIC FOR SUBMITTING FORM DATA HEREEEEEEEEE
     console.log("Form submitted:", formValues);
+    router.push("/patient/personalInfo");
+  };
+
+  const handleCancel = () => {
     router.push("/patient/personalInfo");
   };
 
   return (
     <div className="flex h-screen">
+      {/* Left Menu Panel */}
       <LeftMenuBar />
 
       <div className="w-[80%] p-8">
@@ -149,7 +154,10 @@ const EditInfoPage = () => {
               required
             />
           </div>
-          <Button title="Save" type="submit" />
+          <div className="flex gap-4">
+            <Button title="Save" type="submit" />
+            <Button title="Cancel" type="button" onClick={handleCancel} />
+          </div>
         </form>
       </div>
     </div>
