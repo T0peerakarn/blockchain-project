@@ -1,30 +1,40 @@
-"use server"
+"use server";
 
-import {createClient} from "@/lib/supabase/supabaseServerClient";
-import {redirect} from "next/navigation";
+import { createClient } from "@/lib/supabase/supabaseServerClient";
+import { redirect } from "next/navigation";
+
+interface UserRole {
+  role: {
+    role_name: string;
+  };
+}
 
 export async function loginAction(previousState: unknown, formData: FormData) {
+  const credentials = {
+    email: formData.get("email") as string,
+    password: formData.get("password") as string,
+  };
 
-    const data = {
-        email: formData.get('email') as string,
-        password: formData.get('password') as string
-    }
+  if (credentials.email === "") {
+    return { error: "Email required!" };
+  }
 
-    if (data.email === "") {
-        return {error: "Email required!"}
-    }
+  if (credentials.password === "") {
+    return { error: "Password required!" };
+  }
 
-    if (data.password === "") {
-        return {error: "Password required!"}
-    }
+  const supabase = await createClient();
+  const { error } = await supabase.auth.signInWithPassword(credentials);
 
-    const supabase = await createClient();
-    const {error} = await supabase.auth.signInWithPassword(data)
+  if (error) {
+    return { error: error.message };
+  } else {
+    const {
+      data: {
+        role: { role_name },
+      },
+    } = await supabase.from("user_role").select(`role(role_name)`).single();
 
-    if (error) {
-        return {error: error.message}
-    } else {
-        redirect('/patient/landing')
-    }
-
+    redirect(`/${role_name}/landing`);
+  }
 }
