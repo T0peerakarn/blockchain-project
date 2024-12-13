@@ -63,8 +63,13 @@ const EditInfoPage = () => {
       <LeftMenuBar />
 
       <div className="w-[80%] p-8">
-        <h1 className="josefin-sans text-xl mb-4 text-[#585858] font-medium">Edit Personal Information</h1>
-        <form onSubmit={handleSubmit} className="bg-white shadow-md rounded-lg p-8">
+        <h1 className="josefin-sans text-xl mb-4 text-[#585858] font-medium">
+          Edit Personal Information
+        </h1>
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white shadow-md rounded-lg p-8"
+        >
           <div className="mb-4">
             <label className="text-lg font-medium">First Name</label>
             <input

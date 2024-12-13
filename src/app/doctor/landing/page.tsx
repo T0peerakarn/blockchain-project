@@ -3,63 +3,54 @@
 import { useEffect, useState } from "react";
 
 import LeftMenuBar from "@/components/LeftMenuBar";
-import SearchBar from "@/components/SearchBar";
-import Table from "@/components/Table";
+import AppointmentsSection from "./AppointmentsSection";
+import PatientsSection from "./PatientsSection";
 
-interface Appointment {
+interface IUser {
   id: string;
-  patient: string;
-  time: string;
-  purpose: string;
+  first_name: string;
+  last_name: string;
 }
 
+type SectionType = "Patients" | "Appointments";
+
 const DoctorLandingPage = () => {
-  const [appointments, setAppointments] = useState<
-    Record<string, keyof Appointment>[]
-  >([]);
+  const [user, setUser] = useState<IUser>();
+  const [currentSection, setCurrentSection] =
+    useState<SectionType>("Appointments");
 
   const menuItems = [
-    { title: "Patients", onClick: () => console.log("Patients") },
-    { title: "Appointments", onClick: () => console.log("Appointments") },
-    { title: "Billing", onClick: () => console.log("Billing") },
-    { title: "Reports", onClick: () => console.log("Reports") },
-    { title: "Settings", onClick: () => console.log("Settings") },
+    { title: "Appointments", onClick: () => setCurrentSection("Appointments") },
+    { title: "Patients", onClick: () => setCurrentSection("Patients") },
   ];
 
-  const appointmentColumns = [
-    { key: "patient", title: "Patient name" },
-    { key: "time", title: "Appointment time" },
-    { key: "name", title: "Purpose of visit" },
-  ];
+  const renderSection = () => {
+    switch (currentSection) {
+      case "Appointments":
+        return <AppointmentsSection />;
+      case "Patients":
+        return <PatientsSection />;
+    }
+  };
 
   useEffect(() => {
-    fetch("/appointments.json")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => setAppointments(data))
-      .catch((error) => console.error("Fetch error:", error));
+    const fetchData = async () => {
+      const res = await fetch("/api/personal-info");
+      const { user } = await res.json();
+
+      setUser(user);
+    };
+
+    fetchData();
   }, []);
 
   return (
-    <div className="flex h-screen">
-      <LeftMenuBar menuItems={menuItems} />
-
-      <div className="w-[80%] p-8">
-        <div className="mb-8">
-          <SearchBar placeholder="Search..." />
-        </div>
-
-        <Table
-          title="Today's Appointment Summary"
-          columns={appointmentColumns}
-          data={appointments}
-        />
+    user && (
+      <div className="flex">
+        <LeftMenuBar name={user.first_name} menuItems={menuItems} />
+        <div className="w-[80%] p-8">{renderSection()}</div>
       </div>
-    </div>
+    )
   );
 };
 
