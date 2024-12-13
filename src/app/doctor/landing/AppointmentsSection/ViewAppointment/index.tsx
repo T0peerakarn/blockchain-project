@@ -137,6 +137,7 @@ const ViewAppointment = ({
                       setStart(e.target.value)
                     }
                     name="start"
+                    disabled={isRecorded}
                   />
                   <span>to</span>
                   <input
@@ -147,6 +148,7 @@ const ViewAppointment = ({
                       setEnd(e.target.value)
                     }
                     name="end"
+                    disabled={isRecorded}
                   />
                 </div>
 
@@ -155,7 +157,13 @@ const ViewAppointment = ({
                 </span>
 
                 <div>
-                  <Button title="Reschedule" disabled={isPendingReschedule} />
+                  <Button
+                    title="Reschedule"
+                    disabled={isPendingReschedule || isRecorded}
+                    type={
+                      isPendingReschedule || isRecorded ? "button" : "submit"
+                    }
+                  />
                 </div>
 
                 <input type="hidden" name="id" value={appointmentId} />
@@ -166,7 +174,7 @@ const ViewAppointment = ({
           <form action={actionRecord}>
             <div className="flex flex-col gap-4">
               <h2 className="josefin-sans text-2xl font-medium">
-                Add medical treatment record
+                Medical treatment record
               </h2>
 
               <textarea
@@ -187,6 +195,7 @@ const ViewAppointment = ({
                 <Button
                   title="Submit"
                   disabled={isPendingRecord || isRecorded}
+                  type={isPendingRecord || isRecorded ? "button" : "submit"}
                 />
               </div>
 
