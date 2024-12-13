@@ -17,7 +17,7 @@ const TextInput = ({
   ...inputProps
 }: TextInputProps) => {
   return (
-    <div>
+    <div className="w-full">
       <p className="josefin-sans italic text-[#939393] font-light">{label}</p>
       <div className="flex flex-row items-center bg-[#F1F1F1] border-[1.5px] border-[#929292] rounded-lg p-2 gap-1 focus-within:bg-white focus-within:border-blue-500 transition-all duration-150">
         {LeftIcon && (

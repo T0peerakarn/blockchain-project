@@ -3,12 +3,6 @@
 import { createClient } from "@/lib/supabase/supabaseServerClient";
 import { redirect } from "next/navigation";
 
-interface UserRole {
-  role: {
-    role_name: string;
-  };
-}
-
 export async function loginAction(previousState: unknown, formData: FormData) {
   const credentials = {
     email: formData.get("email") as string,
@@ -37,4 +31,10 @@ export async function loginAction(previousState: unknown, formData: FormData) {
 
     redirect(`/${role_name}/landing`);
   }
+}
+
+export async function logoutAction() {
+  const supabase = await createClient();
+  await supabase.auth.signOut();
+  redirect("/auth");
 }

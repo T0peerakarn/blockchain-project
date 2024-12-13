@@ -1,21 +1,25 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
+
 import LeftMenuButton from "@/components/LeftMenuButton";
+import Button from "../Button";
+
+import { logoutAction } from "@/app/auth/actions";
 
 interface LeftMenuBarProps {
+  name: string;
   menuItems: { title: string; onClick: () => void }[];
   defaultItem?: string;
 }
 
-const LeftMenuBar = ({ menuItems, defaultItem }: LeftMenuBarProps) => {
+const LeftMenuBar = ({ name, menuItems, defaultItem }: LeftMenuBarProps) => {
   const [selectedItem, setSelectedItem] = useState<string>(
     defaultItem ?? menuItems[0].title
   );
-  const name = "Bhutas";
 
   return (
-    <div className="w-[20%] bg-[#709FEB] p-4">
+    <div className="sticky top-0 left-0 h-screen flex flex-col w-[20%] bg-[#709FEB] p-4">
       <h1 className="ml-6 mt-6 mb-10 josefin-sans text-xl text-white">
         Hello, {name}!
       </h1>
@@ -33,6 +37,9 @@ const LeftMenuBar = ({ menuItems, defaultItem }: LeftMenuBarProps) => {
           </li>
         ))}
       </ul>
+      <div className="mt-auto flex justify-center">
+        <Button title="Logout" onClick={logoutAction} />
+      </div>
     </div>
   );
 };

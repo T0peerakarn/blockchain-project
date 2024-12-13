@@ -101,7 +101,4 @@ const AuthPage = () => {
   );
 };
 
-const styles = {
-  textAppTitle: "",
-};
 export default AuthPage;
