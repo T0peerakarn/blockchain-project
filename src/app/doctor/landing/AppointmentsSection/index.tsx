@@ -53,10 +53,6 @@ const AppointmentsSection = () => {
 
   return (
     <>
-      <div className="mb-8">
-        <SearchBar placeholder="Search..." />
-      </div>
-
       <Table
         title="Today's Appointment Summary"
         columns={appointmentColumns}
