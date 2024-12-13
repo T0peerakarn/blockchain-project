@@ -59,8 +59,10 @@ const PatientLandingPage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch("/api/user");
+      const res = await fetch("/api/personal-info");
       const { user } = await res.json();
+
+      console.log(user);
 
       setUser(user);
     };
