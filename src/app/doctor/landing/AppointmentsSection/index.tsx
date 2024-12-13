@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 
-import SearchBar from "@/components/SearchBar";
 import Table from "@/components/Table";
 import CreateAppointment from "./CreateAppointment";
 
 import { formatDateRange } from "@/utils/datetime";
+import ViewAppointment from "./ViewAppointment";
 
 interface Appointment {
   id: string;
@@ -17,6 +17,7 @@ const AppointmentsSection = () => {
   const [appointments, setAppointments] = useState<
     Record<string, keyof Appointment>[]
   >([]);
+  const [appointmentId, setAppointmentId] = useState<string>("");
 
   const appointmentColumns = [
     { key: "patient", title: "Patient name" },
@@ -51,12 +52,22 @@ const AppointmentsSection = () => {
     fetchData();
   }, []);
 
+  if (appointmentId !== "") {
+    return (
+      <ViewAppointment
+        appointmentId={appointmentId}
+        setAppointmentId={(id: string) => setAppointmentId(id)}
+      />
+    );
+  }
+
   return (
     <>
       <Table
         title="Today's Appointment Summary"
         columns={appointmentColumns}
         data={appointments}
+        onClickRow={(id: string) => setAppointmentId(id)}
       />
 
       <div className="mb-8" />
