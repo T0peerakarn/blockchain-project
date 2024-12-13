@@ -6,7 +6,7 @@ import TextInput from "@/components/TextInput";
 import Select from "react-select";
 import Button from "@/components/Button";
 
-import { submitAppointment } from "./actions";
+import { submitAppointment } from "../actions";
 
 import Swal from "sweetalert2";
 
