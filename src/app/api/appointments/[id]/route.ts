@@ -17,7 +17,9 @@ export const GET = async (
       `
     *,
     patient_info ( first_name, last_name ),
-    medical_records ( detail )
+    medical_records ( detail ),
+    doctor_info ( first_name, last_name ),
+    cases ( id, title )
   `
     )
     .eq("id", id)

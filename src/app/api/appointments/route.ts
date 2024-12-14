@@ -10,7 +10,8 @@ export const GET = async () => {
   const { data, error } = await supabase.from("appointments").select(`
     *,
     patient_info ( first_name, last_name ),
-    medical_records ( detail )
+    medical_records ( detail ),
+    cases ( title )
   `);
 
   if (error) {

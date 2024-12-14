@@ -95,6 +95,7 @@ export const createRecord = async (
     patient_id: formData.get("patient_id"),
     detail: formData.get("record"),
     appointment_id: formData.get("appointment_id"),
+    case_id: formData.get("case_id"),
   });
 
   console.log(`error: ${JSON.stringify(error)}`);
