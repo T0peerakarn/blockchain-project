@@ -3,10 +3,10 @@ import { FaArrowLeftLong } from "react-icons/fa6";
 
 import { formatDateRange } from "@/utils/datetime";
 import Button from "@/components/Button";
-import { rescheduleAppointment, submitRecord } from "../actions";
+import { rescheduleAppointment, createRecord } from "../actions";
 import Swal from "sweetalert2";
 
-interface ViewAppointmentProps {
+interface AppointmentInfoProps {
   appointmentId: string;
   setAppointmentId: (id: string) => void;
 }
@@ -18,10 +18,10 @@ interface IAppointment {
   datetime: string;
 }
 
-const ViewAppointment = ({
+const AppointmentInfo = ({
   appointmentId,
   setAppointmentId,
-}: ViewAppointmentProps) => {
+}: AppointmentInfoProps) => {
   const [appointment, setAppointment] = useState<IAppointment>();
   const [start, setStart] = useState<string>("");
   const [end, setEnd] = useState<string>("");
@@ -34,7 +34,7 @@ const ViewAppointment = ({
   const [dataReschedule, actionReschedule, isPendingReschedule] =
     useActionState(rescheduleAppointment, undefined);
   const [dataRecord, actionRecord, isPendingRecord] = useActionState(
-    submitRecord,
+    createRecord,
     undefined
   );
 
@@ -214,4 +214,4 @@ const ViewAppointment = ({
   );
 };
 
-export default ViewAppointment;
+export default AppointmentInfo;

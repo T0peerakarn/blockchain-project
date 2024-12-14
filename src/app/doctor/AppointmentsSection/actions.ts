@@ -2,7 +2,7 @@
 
 import { createClient } from "@/lib/supabase/supabaseServerClient";
 
-export const submitAppointment = async (
+export const createAppointment = async (
   previousState: unknown,
   formData: FormData
 ) => {
@@ -41,9 +41,11 @@ export const submitAppointment = async (
     detail: formData.get("detail"),
     start_datetime: new Date(formData.get("start") as string),
     end_datetime: new Date(formData.get("end") as string),
+    case_id: formData.get("case_id"),
   };
 
-  await supabase.from("appointments").insert(payload);
+  const { error } = await supabase.from("appointments").insert(payload);
+  console.log(JSON.stringify(error));
 
   return { ok: true };
 };
@@ -79,7 +81,7 @@ export const rescheduleAppointment = async (
   return { ok: true };
 };
 
-export const submitRecord = async (
+export const createRecord = async (
   previousState: unknown,
   formData: FormData
 ) => {

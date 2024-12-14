@@ -13,17 +13,20 @@ export const GET = async () => {
     },
   } = await supabase.auth.getUser();
 
-  const {
-    data: {
-      role: { role_name },
-    },
-  } = await supabase.from("user_role").select("role ( role_name )").single();
+  const { data, error } = await supabase
+    .from("cases")
+    .select(
+      `
+    *,
+    patient_info ( first_name, last_name )
+  `
+    )
+    .eq("status", "ACTIVE")
+    .eq("doctor_id", id);
 
-  const { data } = await supabase
-    .from(`${role_name}_info`)
-    .select("*")
-    .eq("id", id)
-    .single();
+  if (error) {
+    return NextResponse.json(error);
+  }
 
-  return NextResponse.json({ user: data });
+  return NextResponse.json({ cases: data });
 };

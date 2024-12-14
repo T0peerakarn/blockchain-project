@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import LeftMenuBar from "@/components/LeftMenuBar";
 import AppointmentsSection from "./AppointmentsSection";
 import PatientsSection from "./PatientsSection";
+import CasesSection from "./CasesSection";
 
 interface IUser {
   id: string;
@@ -12,7 +13,7 @@ interface IUser {
   last_name: string;
 }
 
-type SectionType = "Patients" | "Appointments";
+type SectionType = "Appointments" | "Cases" | "Patients";
 
 const DoctorLandingPage = () => {
   const [user, setUser] = useState<IUser>();
@@ -21,6 +22,7 @@ const DoctorLandingPage = () => {
 
   const menuItems = [
     { title: "Appointments", onClick: () => setCurrentSection("Appointments") },
+    { title: "Cases", onClick: () => setCurrentSection("Cases") },
     { title: "Patients", onClick: () => setCurrentSection("Patients") },
   ];
 
@@ -30,6 +32,8 @@ const DoctorLandingPage = () => {
         return <AppointmentsSection />;
       case "Patients":
         return <PatientsSection />;
+      case "Cases":
+        return <CasesSection />;
     }
   };
 
