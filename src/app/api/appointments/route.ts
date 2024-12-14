@@ -7,11 +7,15 @@ import { createClient } from "@/lib/supabase/supabaseServerClient";
 export const GET = async () => {
   const supabase = await createClient();
 
-  const { data, error } = await supabase.from("patient_info").select("*");
+  const { data, error } = await supabase.from("appointments").select(`
+    *,
+    patient_info ( first_name, last_name ),
+    medical_records ( detail )
+  `);
 
   if (error) {
     return NextResponse.json(error);
   }
 
-  return NextResponse.json({ patients: data });
+  return NextResponse.json({ appointments: data });
 };

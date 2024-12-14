@@ -2,9 +2,10 @@ interface TableProps {
   title: string;
   columns: { title: string; key: string }[];
   data: Record<string, string>[];
+  onClickRow?: (id: string) => void;
 }
 
-const Table = ({ title, columns, data }: TableProps) => {
+const Table = ({ title, columns, data, onClickRow }: TableProps) => {
   return (
     <div>
       <h2 className="josefin-sans text-xl mb-4 text-[#585858]">{title}</h2>
@@ -20,9 +21,19 @@ const Table = ({ title, columns, data }: TableProps) => {
         </thead>
         <tbody>
           {data.map((row) => (
-            <tr key={row.id} className="josefin-sans">
+            <tr
+              key={row.id}
+              className={`josefin-sans ${
+                onClickRow &&
+                "cursor-pointer hover:bg-[#94BBFC] hover:text-white transition-all duration-150"
+              }`}
+              onClick={onClickRow && (() => onClickRow(row.id))}
+            >
               {columns.map((col) => (
-                <td key={col.key as string} className="p-4 border-b font-light">
+                <td
+                  key={col.key as string}
+                  className={"p-4 border-b font-light"}
+                >
                   {row[col.key] as string}
                 </td>
               ))}

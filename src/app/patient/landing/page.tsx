@@ -13,7 +13,14 @@ interface Appointment {
   date: string;
 }
 
+interface IUser {
+  id: string;
+  first_name: string;
+  last_name: string;
+}
+
 const PatientLandingPage = () => {
+  const [user, setUser] = useState<IUser>();
   const [appointments, setAppointments] = useState<
     Record<string, keyof Appointment>[]
   >([]);
@@ -50,42 +57,59 @@ const PatientLandingPage = () => {
       .catch((error) => console.error("Fetch error:", error));
   }, []);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetch("/api/personal-info");
+      const { user } = await res.json();
+
+      console.log(user);
+
+      setUser(user);
+    };
+
+    fetchData();
+  }, []);
+
   return (
-    <div className="flex h-screen">
-      {/* Left Menu Panel */}
-      <LeftMenuBar menuItems={menuItems} />
+    user && (
+      <div className="flex h-screen">
+        {/* Left Menu Panel */}
+        <LeftMenuBar name={user.first_name} menuItems={menuItems} />
 
-      <div className="w-[80%] p-8">
-        {/* Search Bar */}
-        <div className="mb-8">
-          <SearchBar placeholder="Search..." />
+        <div className="w-[80%] p-8">
+          {/* Search Bar */}
+          <div className="mb-8">
+            <SearchBar placeholder="Search..." />
+          </div>
+
+          {/* Quick Menu */}
+          <h1 className="josefin-sans text-xl mb-4 text-[#585858]">
+            Quick Menu
+          </h1>
+          <div className="grid grid-cols-3 gap-4 mb-8">
+            <QuickMenuButton
+              title="Make an Appointment"
+              onClick={() => console.log("Make an Appointment clicked")}
+            />
+            <QuickMenuButton
+              title="Change Personal Information"
+              onClick={() => console.log("Change Personal Information clicked")}
+            />
+            <QuickMenuButton
+              title="View Medical History"
+              onClick={() => console.log("View Medical History clicked")}
+            />
+          </div>
+
+          {/* Appointment Summary */}
+          <Table
+            title="Your Appointment Summary"
+            columns={appointmentColumns}
+            data={appointments}
+          />
         </div>
-
-        {/* Quick Menu */}
-        <h1 className="josefin-sans text-xl mb-4 text-[#585858]">Quick Menu</h1>
-        <div className="grid grid-cols-3 gap-4 mb-8">
-          <QuickMenuButton
-            title="Make an Appointment"
-            onClick={() => console.log("Make an Appointment clicked")}
-          />
-          <QuickMenuButton
-            title="Change Personal Information"
-            onClick={() => console.log("Change Personal Information clicked")}
-          />
-          <QuickMenuButton
-            title="View Medical History"
-            onClick={() => console.log("View Medical History clicked")}
-          />
-        </div>
-
-        {/* Appointment Summary */}
-        <Table
-          title="Your Appointment Summary"
-          columns={appointmentColumns}
-          data={appointments}
-        />
       </div>
-    </div>
+    )
   );
 };
 
