@@ -4,7 +4,7 @@ import Table from "@/components/Table";
 import CreateAppointment from "./CreateAppointment";
 
 import { formatDateRange } from "@/utils/datetime";
-import ViewAppointment from "./ViewAppointment";
+import AppointmentInfo from "./AppointmentInfo";
 
 interface Appointment {
   id: string;
@@ -54,7 +54,7 @@ const AppointmentsSection = () => {
 
   if (appointmentId !== "") {
     return (
-      <ViewAppointment
+      <AppointmentInfo
         appointmentId={appointmentId}
         setAppointmentId={(id: string) => setAppointmentId(id)}
       />
