@@ -67,7 +67,7 @@ const AppointmentsSection = () => {
         title="Today's Appointment Summary"
         columns={appointmentColumns}
         data={appointments}
-        onClickRow={(id: string) => setAppointmentId(id)}
+        onClickRow={(row) => setAppointmentId(row.id)}
       />
 
       <div className="mb-8" />

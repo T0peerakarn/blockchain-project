@@ -29,11 +29,7 @@ export async function loginAction(previousState: unknown, formData: FormData) {
       },
     } = await supabase.from("user_role").select(`role(role_name)`).single();
 
-    if (role_name === "doctor") {
-      redirect(`/${role_name}`);
-    } else {
-      redirect(`/${role_name}/landing`);
-    }
+    redirect(`/${role_name}`);
   }
 }
 

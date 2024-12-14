@@ -30,6 +30,7 @@ const AppointmentInfo = ({
 
   const [doctorId, setDoctorId] = useState<string>("");
   const [patientId, setPatientId] = useState<string>("");
+  const [caseId, setCaseId] = useState<string>("");
 
   const [dataReschedule, actionReschedule, isPendingReschedule] =
     useActionState(rescheduleAppointment, undefined);
@@ -60,6 +61,7 @@ const AppointmentInfo = ({
 
       setDoctorId(appointments.doctor_id);
       setPatientId(appointments.patient_id);
+      setCaseId(appointments.cases.id);
     };
 
     fetchData();
@@ -206,6 +208,7 @@ const AppointmentInfo = ({
                 name="appointment_id"
                 value={appointmentId}
               />
+              <input type="hidden" name="case_id" value={caseId} />
             </div>
           </form>
         </>

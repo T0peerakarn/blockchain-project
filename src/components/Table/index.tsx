@@ -2,7 +2,7 @@ interface TableProps {
   title: string;
   columns: { title: string; key: string }[];
   data: Record<string, string>[];
-  onClickRow?: (id: string) => void;
+  onClickRow?: (row: any) => void;
 }
 
 const Table = ({ title, columns, data, onClickRow }: TableProps) => {
@@ -27,7 +27,7 @@ const Table = ({ title, columns, data, onClickRow }: TableProps) => {
                 onClickRow &&
                 "cursor-pointer hover:bg-[#94BBFC] hover:text-white transition-all duration-150"
               }`}
-              onClick={onClickRow && (() => onClickRow(row.id))}
+              onClick={onClickRow && (() => onClickRow(row))}
             >
               {columns.map((col) => (
                 <td

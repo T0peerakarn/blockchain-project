@@ -11,19 +11,21 @@ export const GET = async (
   const { caseId } = await params;
   const supabase = await createClient();
 
-  const { data, error } = await supabase.from("medical_records").select(
-    `
+  const { data, error } = await supabase
+    .from("medical_records")
+    .select(
+      `
     *,
-    doctor_info ( first_name, last_name ),
-    appointments ( case_id )
+    doctor_info ( first_name, last_name )
   `
-  );
+    )
+    .eq("case_id", caseId);
 
   if (error) {
     return NextResponse.json(error);
   }
 
   return NextResponse.json({
-    records: data.filter((r) => r.appointments.case_id === caseId),
+    records: data,
   });
 };

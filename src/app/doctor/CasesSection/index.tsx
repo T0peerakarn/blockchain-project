@@ -51,7 +51,7 @@ const CasesSection = () => {
         title="Your Cases"
         columns={caseColumns}
         data={cases}
-        onClickRow={(id: string) => setCaseId(id)}
+        onClickRow={(row) => setCaseId(row.id)}
       />
 
       <div className="mb-8" />
