@@ -12,20 +12,13 @@ export const GET = async (
   const supabase = await createClient();
 
   const { data, error } = await supabase
-    .from("appointments")
-    .select(
-      `
-    *,
-    patient_info ( first_name, last_name ),
-    medical_records ( detail )
-  `
-    )
-    .eq("id", id)
-    .single();
+    .from("cases")
+    .select(`*`)
+    .eq("patient_id", id);
 
   if (error) {
     return NextResponse.json(error);
   }
 
-  return NextResponse.json({ appointments: data });
+  return NextResponse.json({ cases: data });
 };
