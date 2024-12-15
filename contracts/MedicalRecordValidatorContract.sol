@@ -10,7 +10,7 @@ contract MedicalRecordValidator {
         bytes16 doctorId;
         string detail;
         string createdAt;
-        bytes32 consentDataHash;
+        // bytes32 consentDataHash;
     }
 
     bytes32[] chain;
@@ -51,7 +51,7 @@ contract MedicalRecordValidator {
             record.doctorId,
             record.detail,
             record.createdAt,
-            record.consentDataHash,
+            // record.consentDataHash,
             chain[chainLength - 1]
         ));
     }
@@ -86,7 +86,7 @@ contract MedicalRecordValidator {
     function getPreviousRecordHash(
         bytes32 previousHash,
         Record calldata record
-    ) internal view returns (
+    ) internal pure returns (
         bytes32
     ) {
         return keccak256(abi.encodePacked(
@@ -95,7 +95,7 @@ contract MedicalRecordValidator {
             record.doctorId,
             record.detail,
             record.createdAt,
-            record.consentDataHash,
+            // record.consentDataHash,
             previousHash
         ));
     }

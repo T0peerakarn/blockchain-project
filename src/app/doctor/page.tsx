@@ -6,6 +6,7 @@ import LeftMenuBar from "@/components/LeftMenuBar";
 import AppointmentsSection from "./AppointmentsSection";
 import PatientsSection from "./PatientsSection";
 import CasesSection from "./CasesSection";
+import ValidateSection from "./ValidateSection";
 
 interface IUser {
   id: string;
@@ -13,7 +14,7 @@ interface IUser {
   last_name: string;
 }
 
-type SectionType = "Appointments" | "Cases" | "Patients";
+type SectionType = "Appointments" | "Cases" | "Patients" | "Validate";
 
 const DoctorLandingPage = () => {
   const [user, setUser] = useState<IUser>();
@@ -24,6 +25,7 @@ const DoctorLandingPage = () => {
     { title: "Appointments", onClick: () => setCurrentSection("Appointments") },
     { title: "Cases", onClick: () => setCurrentSection("Cases") },
     { title: "Patients", onClick: () => setCurrentSection("Patients") },
+    { title: "Validate Records", onClick: () => setCurrentSection("Validate") },
   ];
 
   const renderSection = () => {
@@ -34,6 +36,8 @@ const DoctorLandingPage = () => {
         return <PatientsSection />;
       case "Cases":
         return <CasesSection />;
+      case "Validate":
+        return <ValidateSection />;
     }
   };
 

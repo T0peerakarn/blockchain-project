@@ -6,6 +6,11 @@ import Button from "@/components/Button";
 import { rescheduleAppointment, createRecord } from "../actions";
 import Swal from "sweetalert2";
 
+import { ethers } from "ethers";
+import { keccak256 } from "ethers/lib/utils";
+import contractAddress from "@/lib/contracts/MedicalRecordValidator/contractAddress.json";
+import contractAbi from "@/lib/contracts/MedicalRecordValidator/contractAbi.json";
+
 interface AppointmentInfoProps {
   appointmentId: string;
   setAppointmentId: (id: string) => void;
@@ -79,13 +84,44 @@ const AppointmentInfo = ({
   }, [dataReschedule]);
 
   useEffect(() => {
-    if (!isPendingRecord && dataRecord && dataRecord.ok) {
+    const addRecord = async (payload: Record<string, string>) => {
+      const formattedDoctorId = Buffer.from(
+        doctorId.replaceAll("-", ""),
+        "hex"
+      );
+      const formattedPatientId = Buffer.from(
+        patientId.replaceAll("-", ""),
+        "hex"
+      );
+
+      const provider = new ethers.providers.JsonRpcProvider(
+        process.env.HARDHAT_URL
+      );
+      const signer = new ethers.Wallet(keccak256(formattedDoctorId), provider);
+      const contract = new ethers.Contract(
+        contractAddress.address,
+        contractAbi.abi,
+        signer
+      );
+
+      await contract.addRecord({
+        id: payload.id,
+        patientId: formattedPatientId,
+        doctorId: formattedDoctorId,
+        detail: payload.detail,
+        createdAt: payload.created_at,
+      });
+    };
+
+    if (!isPendingRecord && dataRecord && dataRecord.data) {
       Swal.fire({
         title: "Success!",
         text: "The record has been submitted",
         icon: "success",
         willClose: () => location.reload(),
       });
+
+      addRecord(dataRecord.data);
     }
   }, [dataRecord]);
 

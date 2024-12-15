@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/supabaseServerClient";
+
 import { redirect } from "next/navigation";
 
 export async function loginAction(previousState: unknown, formData: FormData) {
@@ -25,11 +26,12 @@ export async function loginAction(previousState: unknown, formData: FormData) {
   } else {
     const {
       data: {
+        user_id,
         role: { role_name },
       },
-    } = await supabase.from("user_role").select(`role(role_name)`).single();
+    } = await supabase.from("user_role").select(`*,role(role_name)`).single();
 
-    redirect(`/${role_name}`);
+    return { data: { role_name, user_id } };
   }
 }
 

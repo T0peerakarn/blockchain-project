@@ -90,15 +90,23 @@ export const createRecord = async (
   }
 
   const supabase = await createClient();
-  const { error } = await supabase.from("medical_records").insert({
-    doctor_id: formData.get("doctor_id"),
-    patient_id: formData.get("patient_id"),
-    detail: formData.get("record"),
-    appointment_id: formData.get("appointment_id"),
-    case_id: formData.get("case_id"),
-  });
 
-  console.log(`error: ${JSON.stringify(error)}`);
+  const { data, error: supabaseError } = await supabase
+    .from("medical_records")
+    .insert({
+      doctor_id: formData.get("doctor_id"),
+      patient_id: formData.get("patient_id"),
+      detail: formData.get("record"),
+      appointment_id: formData.get("appointment_id"),
+      case_id: formData.get("case_id"),
+    })
+    .select()
+    .single();
 
-  return { ok: true };
+  if (supabaseError) {
+    console.error(supabaseError);
+    return { error: supabaseError.message };
+  }
+
+  return { data };
 };
