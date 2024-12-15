@@ -1,8 +1,9 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 
 import Image from "next/image";
+import { redirect } from "next/navigation";
 
 import TextInput from "@/components/TextInput";
 
@@ -10,11 +11,45 @@ import { FiEye, FiEyeOff } from "react-icons/fi";
 import Button from "@/components/Button";
 import { loginAction } from "@/app/auth/actions";
 
+import { ethers } from "ethers";
+import { keccak256 } from "ethers/lib/utils";
+
 const AuthPage = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [data, action, isPending] = useActionState(loginAction, undefined);
+
+  useEffect(() => {
+    const initAccount = async (data: Record<string, string>) => {
+      const formattedUserId = Buffer.from(
+        data.user_id.replaceAll("-", ""),
+        "hex"
+      );
+
+      if (data.role_name === "doctor") {
+        const provider = new ethers.providers.JsonRpcProvider(
+          process.env.HARDHAT_URL
+        );
+
+        const signer = new ethers.Wallet(keccak256(formattedUserId), provider);
+
+        const balance = await provider.getBalance(signer.address);
+        if (balance.isZero()) {
+          await provider.send("hardhat_setBalance", [
+            signer.address,
+            ethers.utils.parseEther("100.0").toHexString(),
+          ]);
+        }
+      }
+
+      redirect(`/${data.role_name}`);
+    };
+
+    if (!isPending && data && data.data) {
+      initAccount(data.data);
+    }
+  }, [data]);
 
   return (
     <div className="flex flex-row h-screen">
