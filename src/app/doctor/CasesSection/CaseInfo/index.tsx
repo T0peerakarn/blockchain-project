@@ -9,6 +9,7 @@ import { transferCase } from "../action";
 import { formatDate } from "@/utils/datetime";
 import Table from "@/components/Table";
 import Swal from "sweetalert2";
+import {ethers} from "ethers";
 
 interface CaseInfoProps {
   caseId: string;
@@ -19,6 +20,7 @@ interface ICase {
   id: string;
   title: string;
   patient: string;
+  patientId: string;
   status: string;
 }
 
@@ -28,6 +30,182 @@ interface IRecord extends Record<string, string> {
   createdAt: string;
 }
 
+const uuidToHex = (uuid) => {
+  const hex = uuid.replace(/-/g, ''); // Remove dashes from the UUID
+  return '0x' + hex.slice(0, 32);
+};
+
+const contractAddress = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
+const abi = [
+  {
+    "inputs": [],
+    "name": "getNumberOfRecords",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes16",
+        "name": "_currentDoctorId",
+        "type": "bytes16"
+      },
+      {
+        "internalType": "bytes16",
+        "name": "_newDoctorId",
+        "type": "bytes16"
+      },
+      {
+        "internalType": "bytes16",
+        "name": "_patientId",
+        "type": "bytes16"
+      },
+      {
+        "internalType": "string",
+        "name": "_createdAt",
+        "type": "string"
+      }
+    ],
+    "name": "transferRecordToNewDoctor",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_recordId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getTransferRecord",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes16",
+        "name": "currentDoctorId",
+        "type": "bytes16"
+      },
+      {
+        "internalType": "bytes16",
+        "name": "newDoctorId",
+        "type": "bytes16"
+      },
+      {
+        "internalType": "bytes16",
+        "name": "patientId",
+        "type": "bytes16"
+      },
+      {
+        "internalType": "string",
+        "name": "createdAt",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes16",
+        "name": "_patientId",
+        "type": "bytes16"
+      }
+    ],
+    "name": "getPatientTransfers",
+    "outputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "",
+        "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "recordId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes16",
+        "name": "patientId",
+        "type": "bytes16"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes16",
+        "name": "currentDoctorId",
+        "type": "bytes16"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes16",
+        "name": "newDoctorId",
+        "type": "bytes16"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "createdAt",
+        "type": "string"
+      }
+    ],
+    "name": "TransferRecorded",
+    "type": "event"
+  }
+]
+
+async function connectToProvider() {
+  if (window.ethereum) {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    await window.ethereum.request({ method: 'eth_requestAccounts' });  // Request user accounts
+    return provider;
+  } else {
+    alert('Please install MetaMask to interact with this app.');
+  }
+}
+
+async function getContract() {
+  const provider = await connectToProvider();
+  const signer = provider.getSigner();
+  return new ethers.Contract(contractAddress, abi, signer);
+}
+
+async function addCaseTransferToContract(currentDoctorId, newDoctorId, patientId, createdAt) {
+  const contract = await getContract();
+
+  try {
+    const tx = await contract.transferRecordToNewDoctor(uuidToHex(patientId), uuidToHex(currentDoctorId), uuidToHex(newDoctorId), createdAt);
+    console.log("Transaction sent:", tx);
+
+    // Wait for the transaction to be mined
+    await tx.wait();
+    console.log("Case transferred successfully!");
+  } catch (err) {
+    console.error("Error transferring case:", err);
+  }
+}
+
 const CaseInfo = ({ caseId, setCaseId }: CaseInfoProps) => {
   const [medicalCase, setMedicalCase] = useState<ICase>();
   const [doctors, setDoctors] = useState<{ value: string; label: string }[]>(
@@ -35,6 +213,8 @@ const CaseInfo = ({ caseId, setCaseId }: CaseInfoProps) => {
   );
   const [doctorId, setDoctorId] = useState<string>("");
   const [records, setRecords] = useState<IRecord[]>([]);
+  const [selectedDoctorId, setSelectedDoctorId] = useState<string | null>("");
+  const [contractPending, setContractPending] = useState<boolean>(false);
 
   const [data, action, isPending] = useActionState(transferCase, undefined);
 
@@ -53,11 +233,13 @@ const CaseInfo = ({ caseId, setCaseId }: CaseInfoProps) => {
         id: cases.id,
         title: cases.title,
         patient: `${cases.patient_info.first_name} ${cases.patient_info.last_name}`,
+        patientId: cases.patient_id,
         status: cases.status,
       });
 
       setDoctorId(cases.doctor_id);
     };
+
 
     fetchData();
   }, []);
@@ -96,7 +278,7 @@ const CaseInfo = ({ caseId, setCaseId }: CaseInfoProps) => {
   }, []);
 
   useEffect(() => {
-    if (!isPending && data && data.ok) {
+    if (!isPending && data && data.ok && !contractPending) {
       Swal.fire({
         title: "Success!",
         text: "The case has been transferred",
@@ -104,7 +286,19 @@ const CaseInfo = ({ caseId, setCaseId }: CaseInfoProps) => {
         willClose: () => location.reload(),
       });
     }
-  }, [data]);
+  }, [data, contractPending]);
+
+  const handleTransfer = async (newDoctorId, patientId) => {
+    console.log(doctorId, newDoctorId, patientId);
+    const createdAt = new Date().toISOString();
+
+    setContractPending(true);
+    addCaseTransferToContract(doctorId, newDoctorId, patientId, createdAt).then(() => {
+      setContractPending(false);
+    });
+
+  };
+
 
   return (
     <>
@@ -153,6 +347,7 @@ const CaseInfo = ({ caseId, setCaseId }: CaseInfoProps) => {
                   getOptionLabel={(option) => option.label}
                   className="w-96"
                   name="doctor_id"
+                  onChange={(option) => setSelectedDoctorId(option ? option.value : null)}
                 />
 
                 <span className="josefin-sans text-red-500 text-center">
@@ -164,6 +359,7 @@ const CaseInfo = ({ caseId, setCaseId }: CaseInfoProps) => {
                     title="Transfer"
                     disabled={isPending}
                     type={isPending ? "button" : "submit"}
+                    onClick={() => handleTransfer(selectedDoctorId, medicalCase.patientId)}
                   />
                 </div>
 
