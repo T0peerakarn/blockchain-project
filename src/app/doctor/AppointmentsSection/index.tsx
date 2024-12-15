@@ -45,7 +45,7 @@ const AppointmentsSection = () => {
               new Date(a.end_datetime)
             ),
             purpose: `${a.detail}${
-              a.medical_records.length > 0 && " [COMPLETED]"
+              a.medical_records.length > 0 ? " [COMPLETED]" : ""
             }`,
           }))
       );
