@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 const main = async () => {
-  const contracts = ["HelloWorld", "MedicalRecordValidator"];
+  const contracts = ["HelloWorld", "MedicalRecordValidator", "DoctorTransfer", "PatientDataInteraction"];
 
   for (const contractName of contracts) {
     const Contract = await ethers.getContractFactory(contractName);
